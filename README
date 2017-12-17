@@ -1,0 +1,38 @@
+#############################################################
+a simple Lattice QCD demonstration program
+
+Author: Wei Sun
+Date: 2017.12.5
+
+Wilson-Dirac operator and Minimal Residual inverter
+implemented, random number generator and some useful
+routines of Luscher also included
+############################################################
+
+File structure
+==============
+./simpleLQCD
+       |
+       +------include  -> all header files
+       |
+       +------modules  -> all source code implementation
+       |
+       +------main     -> main program, currently just test
+
+Compilation
+===========
+For choosing a specific compiler, one may first set the environment variable
+for example,
+    export CC=/usr/bin/gcc (for C) or
+    export CXX=/usr/bin/g++ (for C++)
+
+usually one just need to execute the following command to compile,
+        
+        step1: mkdir build && cd build
+        step2: cmake ../
+        step3: make
+
+where program will be installed to directory build, leaving the source code
+unpolluted, other compiler flags can be found in file CMakeLists.txt.
+
+More about the usuage of cmake can be found online.

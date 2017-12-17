@@ -1,0 +1,46 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+.././include/dirac.h
+linalg.h
+.././include/linalg.h
+
+.././include/global.h
+
+.././include/init.h
+dirac.h
+.././include/dirac.h
+random.h
+.././include/random.h
+
+.././include/linalg.h
+su3.h
+.././include/su3.h
+
+.././include/random.h
+su3.h
+.././include/su3.h
+
+.././include/su3.h
+global.h
+.././include/global.h
+
+/home/sunwei/software/simpleLQCD/main/main.c
+stdio.h
+-
+stdlib.h
+-
+math.h
+-
+linalg.h
+/home/sunwei/software/simpleLQCD/main/linalg.h
+dirac.h
+/home/sunwei/software/simpleLQCD/main/dirac.h
+init.h
+/home/sunwei/software/simpleLQCD/main/init.h
+
