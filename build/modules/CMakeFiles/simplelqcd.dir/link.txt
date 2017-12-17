@@ -1,2 +1,0 @@
-/usr/bin/ar qc libsimplelqcd.a  CMakeFiles/simplelqcd.dir/dirac.c.o CMakeFiles/simplelqcd.dir/random.c.o CMakeFiles/simplelqcd.dir/init.c.o CMakeFiles/simplelqcd.dir/linalg.c.o
-/usr/bin/ranlib libsimplelqcd.a

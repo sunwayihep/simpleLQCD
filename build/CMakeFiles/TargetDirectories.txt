@@ -1,6 +1,0 @@
-/home/sunwei/software/simpleLQCD/build/CMakeFiles/edit_cache.dir
-/home/sunwei/software/simpleLQCD/build/CMakeFiles/rebuild_cache.dir
-/home/sunwei/software/simpleLQCD/build/CMakeFiles/main.dir
-/home/sunwei/software/simpleLQCD/build/modules/CMakeFiles/edit_cache.dir
-/home/sunwei/software/simpleLQCD/build/modules/CMakeFiles/rebuild_cache.dir
-/home/sunwei/software/simpleLQCD/build/modules/CMakeFiles/simplelqcd.dir

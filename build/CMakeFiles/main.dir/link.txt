@@ -1,1 +1,0 @@
-/home/sunwei/software/anaconda3/bin/gcc  -std=c99   CMakeFiles/main.dir/main/main.c.o  -o main -rdynamic modules/libsimplelqcd.a -lm 
