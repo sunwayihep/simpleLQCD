@@ -103,4 +103,31 @@ void init_spinor_random(spinor_field s, int iseed)
           }
 }
 
+void su3_field_alloc(su3_field** u)
+{
+  
+  (*u) = (su3_field*)calloc(NX*NY*NZ*NT*4*18, sizeof(Float));
 
+}
+
+void su3_field_free(su3_field** u)
+{
+  
+  free(*u);
+  *u = NULL;
+}
+
+void spinor_field_alloc(spinor_field** s)
+{
+ 
+  (*s) = (spinor_field*)calloc(NX*NY*NZ*NT*4*3*2, sizeof(Float));
+
+}
+
+void spinor_field_free(spinor_field** s)
+{
+ 
+  free(*s);
+  *s = NULL;
+
+}

@@ -9,10 +9,10 @@
 //base datatype
 #define Float double
 
-#define NX 12
-#define NY 12
-#define NZ 12
-#define NT 144
+#define NX 8
+#define NY 8
+#define NZ 8
+#define NT 8
 
 // parameters related to bare quark mass 
 // of Wilson-Dirac operator
