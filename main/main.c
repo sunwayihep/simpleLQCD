@@ -10,16 +10,17 @@
 #include "dirac.h"
 #include "init.h"
 
-double kappa = 0.005;
+double kappa = 0.1;
 int max_iter = 1000;
-double tolerance = 1.0e-8;
-double omega = 0.2;
+double tolerance = 1.0e-12;
+double omega = 1.1;
+
 
 int main(int argc, char* argv[])
 {
-//  su3_field u;
-//  spinor_field input;
-//  spinor_field solution;
+
+  printf("kappa= %f, omega= %f\n",kappa, omega);
+
 
   spinor_field* input;
   spinor_field* solution;
@@ -29,8 +30,7 @@ int main(int argc, char* argv[])
   su3_field* u;
   su3_field_alloc(&u);
 
-  printf("u = %-20.16e\n", (*u)[7][7][7][7][0].c33.im);
-  int nseed = 2;
+  int nseed = 10;
   int istart = 1;
 
   for(int iseed=istart; iseed<nseed; iseed++)
@@ -41,10 +41,12 @@ int main(int argc, char* argv[])
       printf("Randomly initialization of gauge field\n" 
              "and source vector for iseed=%d:\n\n",iseed);
 
-      init_gauge_unit(*u);
-      init_spinor_unit(*input);
-      //init_gauge_random(u, iseed);
-      //init_spinor_random(input, iseed);
+//      init_gauge_unit(*u);
+//      init_spinor_field_unit(*input);
+      init_gauge_random(*u, iseed);
+      init_spinor_field_random(*input, iseed);
+
+
       printf("Initialization finished!\n\n");
 
       printf("Starting solve the linear system:\n");
@@ -56,7 +58,7 @@ int main(int argc, char* argv[])
       // to test the MR solver
 
       printf("Test for the correctness of MR inverter:\n\n");
-    //  spinor_field check;
+      //  spinor_field check;
       spinor_field* check;
       spinor_field_alloc(&check);
 
@@ -65,10 +67,10 @@ int main(int argc, char* argv[])
       spinor_field_sub_assign(*check, *input);
       double res = sqrt(norm_square_field(*check));
 
-      printf("Correctness check passed:\n");
+      printf("True residual is:\n");
       printf("|M*solution - source| = %-20.16e\n\n",res);
 
-//      spinor_field_free(&check);
+      spinor_field_free(&check);
 
     }
 

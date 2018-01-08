@@ -233,8 +233,9 @@ void mr_solver(spinor_field solution, su3_field u, spinor_field source)
 
     }
 
+  printf("\n");
   printf("inversion converge after %d of iterations:\n",count);
-  printf("true residual is %.16e\n\n", residual);
+  printf("last residual is %.16e\n\n", residual);
 
 }
 
