@@ -64,7 +64,21 @@ void init_spinor_zero(spinor* s)
 
 }
 
-void init_spinor_unit(spinor_field s)
+void init_spinor_field_zero(spinor_field s)
+{
+
+  for(int it=0; it<NT; it++)
+    for(int iz=0; iz<NZ; iz++)
+      for(int iy=0; iy<NY; iy++)
+        for(int ix=0; ix<NX; ix++)
+          {
+          
+            init_spinor_zero(&(s[it][iz][iy][ix]));
+          
+          }
+}
+
+void init_spinor_field_unit(spinor_field s)
 {
   complex one;
   one.re=1.0; one.im=0.0;
@@ -85,7 +99,7 @@ void init_spinor_unit(spinor_field s)
 
 }
 
-void init_spinor_random(spinor_field s, int iseed)
+void init_spinor_field_random(spinor_field s, int iseed)
 {
 
   for(int it=0; it<NT; it++)
