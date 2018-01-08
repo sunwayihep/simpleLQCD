@@ -115,48 +115,68 @@ void one_pm_gamma_mul(spinor* adr, const int mu, const int pm,
 
 void dslash(spinor_field result, su3_field u, spinor_field input)
 {
-  spinor tmp1, tmp2;
+  spinor tmp1, tmp2, res;
 
   for(int it=0; it<NT; it++)
     for(int iz=0; iz<NZ; iz++)
       for(int iy=0; iy<NY; iy++)
         for(int ix=0; ix<NX; ix++)
           {
-            init_spinor_zero(&tmp2);
+
+            init_spinor_zero(&res);
 
             // t-direction, mu=0
+            // forward 
             su3_spinor_mul(&tmp1, &(u[it][iz][iy][ix][0]),
                            &(input[INC_T(it)][iz][iy][ix]));
             one_pm_gamma_mul(&tmp2, 0, -1, &tmp1);
-            su3_dag_spinor_mul(&tmp1, &(u[it][iz][iy][ix][0]),
+            spinor_add_assign(&res, &tmp2);
+            
+            // backward 
+            su3_dag_spinor_mul(&tmp1, &(u[DEC_T(it)][iz][iy][ix][0]),
                                &(input[DEC_T(it)][iz][iy][ix]));
             one_pm_gamma_mul(&tmp2, 0, 1, &tmp1);
+            spinor_add_assign(&res, &tmp2);
 
             // x-direction, mu=1
+            // forward
             su3_spinor_mul(&tmp1, &(u[it][iz][iy][ix][1]),
                            &(input[it][iz][iy][INC_X(ix)]));
             one_pm_gamma_mul(&tmp2, 1, -1, &tmp1);
-            su3_dag_spinor_mul(&tmp1, &(u[it][iz][iy][ix][1]),
+            spinor_add_assign(&res, &tmp2);
+            
+            // backward
+            su3_dag_spinor_mul(&tmp1, &(u[it][iz][iy][DEC_X(ix)][1]),
                                &(input[it][iz][iy][DEC_X(ix)]));
             one_pm_gamma_mul(&tmp2, 1, 1, &tmp1);
-
+            spinor_add_assign(&res, &tmp2);
+            
             // y-direction, mu=2
+            // forward
             su3_spinor_mul(&tmp1, &(u[it][iz][iy][ix][2]),
                            &(input[it][iz][INC_Y(iy)][ix]));
             one_pm_gamma_mul(&tmp2, 2, -1, &tmp1);
-            su3_dag_spinor_mul(&tmp1, &(u[it][iz][iy][ix][2]),
+            spinor_add_assign(&res, &tmp2);
+            
+            //backward
+            su3_dag_spinor_mul(&tmp1, &(u[it][iz][DEC_Y(iy)][ix][2]),
                                &(input[it][iz][DEC_Y(iy)][ix]));
             one_pm_gamma_mul(&tmp2, 2, 1, &tmp1);
+            spinor_add_assign(&res, &tmp2);
 
             // z-direction, mu=3
+            // forward
             su3_spinor_mul(&tmp1, &(u[it][iz][iy][ix][3]),
                            &(input[it][INC_Z(iz)][iy][ix]));
             one_pm_gamma_mul(&tmp2, 3, -1, &tmp1);
-            su3_dag_spinor_mul(&tmp1, &(u[it][iz][iy][ix][3]),
+            spinor_add_assign(&res, &tmp2);
+
+            su3_dag_spinor_mul(&tmp1, &(u[it][DEC_Z(iz)][iy][ix][3]),
                                &(input[it][DEC_Z(iz)][iy][ix]));
             one_pm_gamma_mul(&tmp2, 3, 1, &tmp1);
+            spinor_add_assign(&res, &tmp2);
 
-            result[it][iz][iy][ix] = tmp2;
+            result[it][iz][iy][ix] = res;
 
           }
 }
@@ -179,7 +199,7 @@ void mr_solver(spinor_field solution, su3_field u, spinor_field source)
 {
   spinor_field  tmp, r, Mr;
 
-  init_spinor_unit(solution);
+  init_spinor_field_zero(solution);
   m_wilson(tmp, u, solution);
   spinor_field_sub(r, source, tmp);
 
