@@ -34,6 +34,10 @@ typedef struct
 typedef su3 su3_field[NT][NZ][NY][NX][4];
 typedef spinor spinor_field[NT][NZ][NY][NX];
 
+// local gauge and spinor field for a slave core
+typedef su3 su3_field_local[NY][NX][4];
+typedef spinor spinor_field_local[NY][NX];
+
 // multiplication of real and complex number
 static inline complex re_complex_mul(complex z, Float f)
 {
@@ -220,9 +224,9 @@ static inline Float vector_prod_im(const su3_vector* const input1,
 
   Float r;
 
-  r = (input1->c1.re*input2->c1.im - input1->c1.im*input2->c1.re +
-       input1->c2.re*input2->c2.im - input1->c2.im*input2->c2.re +
-       input1->c3.re*input2->c3.im - input1->c3.im*input2->c3.re);
+  r = (input1->c1.im*input2->c1.re - input1->c1.re*input2->c1.im +
+       input1->c2.im*input2->c2.re - input1->c2.re*input2->c2.im +
+       input1->c3.im*input2->c3.re - input1->c3.re*input2->c3.im);
 
   return r;
 
@@ -238,22 +242,22 @@ static inline void su3_multiply(su3_vector* result, const su3* const m,
                    m->c12.re*v->c2.re - m->c12.im*v->c2.im +
                    m->c13.re*v->c3.re - m->c13.im*v->c3.im);
   result->c1.im = (m->c11.re*v->c1.im + m->c11.im*v->c1.re +
-                   m->c12.re*v->c1.im + m->c12.im*v->c2.re +
-                   m->c13.re*v->c1.im + m->c13.im*v->c3.re);
+                   m->c12.re*v->c2.im + m->c12.im*v->c2.re +
+                   m->c13.re*v->c3.im + m->c13.im*v->c3.re);
 
   result->c2.re = (m->c21.re*v->c1.re - m->c21.im*v->c1.im +
                    m->c22.re*v->c2.re - m->c22.im*v->c2.im +
                    m->c23.re*v->c3.re - m->c23.im*v->c3.im);
   result->c2.im = (m->c21.re*v->c1.im + m->c21.im*v->c1.re +
-                   m->c22.re*v->c1.im + m->c22.im*v->c2.re +
-                   m->c23.re*v->c1.im + m->c23.im*v->c3.re);
+                   m->c22.re*v->c2.im + m->c22.im*v->c2.re +
+                   m->c23.re*v->c3.im + m->c23.im*v->c3.re);
 
   result->c3.re = (m->c31.re*v->c1.re - m->c31.im*v->c1.im +
                    m->c32.re*v->c2.re - m->c32.im*v->c2.im +
                    m->c33.re*v->c3.re - m->c33.im*v->c3.im);
   result->c3.im = (m->c31.re*v->c1.im + m->c31.im*v->c1.re +
-                   m->c32.re*v->c1.im + m->c32.im*v->c2.re +
-                   m->c33.re*v->c1.im + m->c33.im*v->c3.re);
+                   m->c32.re*v->c2.im + m->c32.im*v->c2.re +
+                   m->c33.re*v->c3.im + m->c33.im*v->c3.re);
 
 }
 
