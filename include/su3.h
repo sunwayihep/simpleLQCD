@@ -201,7 +201,8 @@ static inline void vector_sub(su3_vector* result, const su3_vector* const s1,
 }
 
 // real part of scalar product of two su3 vector
-// r = ((*input1) * (*input2)^*).re
+// r = <s1,s2>= s1^* * s2
+// r = ((*input1)^* * (*input2)).re
 static inline Float vector_prod_re(const su3_vector* const input1, 
                             const su3_vector* const input2)
 {
@@ -217,16 +218,16 @@ static inline Float vector_prod_re(const su3_vector* const input1,
 }
 
 // imaginary part of scalar product of two su3 vector
-// r = ((*input1) * (*input2)^*).im
+// r = ((*input1)^* * (*input2)).im
 static inline Float vector_prod_im(const su3_vector* const input1,
                             const su3_vector* const input2)
 {
 
   Float r;
 
-  r = (input1->c1.im*input2->c1.re - input1->c1.re*input2->c1.im +
-       input1->c2.im*input2->c2.re - input1->c2.re*input2->c2.im +
-       input1->c3.im*input2->c3.re - input1->c3.re*input2->c3.im);
+  r = (input1->c1.re*input2->c1.im - input1->c1.im*input2->c1.re +
+       input1->c2.re*input2->c2.im - input1->c2.im*input2->c2.re +
+       input1->c3.re*input2->c3.im - input1->c3.im*input2->c3.re);
 
   return r;
 
