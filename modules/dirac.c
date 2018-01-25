@@ -49,8 +49,8 @@ void one_pm_gamma_mul(spinor* adr, const int mu, const int pm,
             {
               vector_sub(&(adr->c1), &(in->c1), &(in->c3));
               vector_sub(&(adr->c2), &(in->c2), &(in->c4));
-              re_vector_mul(&(adr->c3), -1.0, &(in->c1));
-              re_vector_mul(&(adr->c4), -1.0, &(in->c2));
+              re_vector_mul(&(adr->c3), -1.0, &(adr->c1));
+              re_vector_mul(&(adr->c4), -1.0, &(adr->c2));
 
             };break;
         default:
