@@ -35,6 +35,10 @@ extern void spinor_field_free(spinor_field** s);
 // read external gauge field
 extern void read_gauge_field(su3_field* u, char filename[]);
 
+// write fermion field to a file
+// cause I don't have a propagator yet -_-
+extern void write_ferm_field(spinor_field* s, char filename[], FILE* fp);
+
 // swap endianess
 extern void swap_endian(su3_field* u);
 

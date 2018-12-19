@@ -156,6 +156,14 @@ void read_gauge_field(su3_field* u, char filename[]){
 	fclose(ptr);
 }
 
+void write_ferm_field(spinor_field* s, char filename[], FILE* ptr){
+	if(ptr == NULL){
+		printf("Error in writing fermion field\n");
+		exit(1);
+	}
+	fwrite(s, sizeof(spinor_field), 1, ptr);
+}
+
 // tedious swap endianess function, but we're using C, so no complain-_-
 void swap_endian(su3_field* u){
 	const int size = sizeof(Float);

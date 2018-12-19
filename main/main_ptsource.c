@@ -26,106 +26,70 @@ int isBigEndian(){
 int main(int argc, char* argv[])
 {
 
-  if(isBigEndian()){
-	  printf("This system is Big Endian.\n");
-  }else{
-	  printf("This system is Little Endian.\n");
-  }
+	if(isBigEndian()){
+		printf("This system is Big Endian.\n");
+	}else{
+		printf("This system is Little Endian.\n");
+	}
 
-  printf("kappa= %f, omega= %f\n",kappa, omega);
-
-
-  spinor_field* input;
-  spinor_field* solution;
-  spinor_field_alloc(&input);
-  spinor_field_alloc(&solution);
-
-  su3_field* u;
-  su3_field_alloc(&u);
-
-  int nseed = 10;
-  int istart = 1;
-
-  su3_field* data;
-  su3_field_alloc(&data);
-  char filename[] = "test.8.cfg";
-  printf("size of su3_field = %i\n", sizeof(data));
-  read_gauge_field(data, filename);
-  swap_endian(data);
-
-  //init_gauge_unit(*data);
-  printf("gauge field readed: \n");
-  //for(int i=0; i<8; ++i){
-//	  printf("%f\n", (((*data)[i][0][0][0][0]).c11.re));
-	  printf("%f\n", (((*data)[0][0][0][0][0]).c11.re));
-	  printf("%f\n", (((*data)[0][0][0][0][0]).c11.im));
-	  printf("%f\n", (((*data)[0][0][0][0][0]).c12.re));
-	  printf("%f\n", (((*data)[0][0][0][0][0]).c12.im));
-
-	  printf("starting inversion: \n");
-	  set_pt_source(input, 0, 0, 1, 8, 2, 3);	
-	  mr_solver(*solution, *data, *input);
-	  
-      printf("Test for the correctness of MR inverter:\n\n");
-      //  spinor_field check;
-      spinor_field* check;
-      spinor_field_alloc(&check);
-
-      m_wilson(*check, *data, *solution);
-
-      spinor_field_sub_assign(*check, *input);
-      double res = sqrt(norm_square_field(*check));
-
-      printf("True residual is:\n");
-      printf("|M*solution - source| = %-20.16e\n\n",res);
-
-      spinor_field_free(&check);
- // for(int iseed=istart; iseed<nseed; iseed++)
- //   {
-
- //     printf("****************************************\n");
-
- //     printf("Randomly initialization of gauge field\n" 
- //            "and source vector for iseed=%d:\n\n",iseed);
-
-////      init_gauge_unit(*u);
-////      init_spinor_field_unit(*input);
- //     init_gauge_random(*u, iseed);
- //     init_spinor_field_random(*input, iseed);
+	printf("kappa= %f, omega= %f\n",kappa, omega);
 
 
- //     printf("Initialization finished!\n\n");
+	spinor_field* input;
+	spinor_field* solution;
+	spinor_field_alloc(&input);
+	spinor_field_alloc(&solution);
 
- //     printf("Starting solve the linear system:\n");
- //     mr_solver(*solution, *u, *input);
+	su3_field* data;
+	su3_field_alloc(&data);
+	// test gauge configuration
+	// 8x8x8x8 double precision
+	char filename[] = "test.8.cfg";
+	printf("size of su3_field = %i\n", sizeof(data));
+	read_gauge_field(data, filename);
+	// I need to swap endianess on my machine -_-
+	swap_endian(data);
 
- //     printf("Inversion finished!\n");
- //     printf("****************************************\n");
- //     // multiply back the solution with Wilson-Dirac operator
- //     // to test the MR solver
+	printf("gauge field readed: \n");
+	printf("%f\n", (((*data)[0][0][0][0][0]).c11.re));
+	printf("%f\n", (((*data)[0][0][0][0][0]).c11.im));
+	printf("%f\n", (((*data)[0][0][0][0][0]).c12.re));
+	printf("%f\n", (((*data)[0][0][0][0][0]).c12.im));
 
- //     printf("Test for the correctness of MR inverter:\n\n");
- //     //  spinor_field check;
- //     spinor_field* check;
- //     spinor_field_alloc(&check);
+	// write the solution from each spin and color source, i.e. 12 in total
+	// to form a propagator
+	char outPropName [] = "pt_source_prop_simpleLQCD";
+	FILE* pf = fopen(outPropName, "w+b");
 
- //     m_wilson(*check, *u, *solution);
+	spinor_field* check;
+	spinor_field_alloc(&check);
+	printf("Solving the Dirac equation to get propagator:\n");
+	for(int spin=0; spin<4; ++spin)
+		for(int color=0; color<3; ++color){
+			set_pt_source(input, 0, 0, 0, 0, color, spin);
+			printf("starting inversion: source spin= %d, source color= %d \n", spin, color);
+			mr_solver(*solution, *data, *input);
 
- //     spinor_field_sub_assign(*check, *input);
- //     double res = sqrt(norm_square_field(*check));
+			printf("Test for the correctness of MR inverter:\n\n");
 
- //     printf("True residual is:\n");
- //     printf("|M*solution - source| = %-20.16e\n\n",res);
+			m_wilson(*check, *data, *solution);
 
- //     spinor_field_free(&check);
+			spinor_field_sub_assign(*check, *input);
+			double res = sqrt(norm_square_field(*check));
 
- //   }
+			printf("True residual is:\n");
+			printf("|M*solution - source| = %-20.16e\n\n",res);
 
-  su3_field_free(&u);
-  su3_field_free(&data);
-  spinor_field_free(&input);
-  spinor_field_free(&solution);
+		//	fwrite(solution, sizeof(spinor_field), 1, pf);
+			write_ferm_field(solution, outPropName, pf);
+		}
+	fclose(pf);
 
-  return 0;
+	spinor_field_free(&check);
+	su3_field_free(&data);
+	spinor_field_free(&input);
+	spinor_field_free(&solution);
+
+	return 0;
 
 }
