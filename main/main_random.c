@@ -3,6 +3,7 @@
  * main function to test Wilson-Dirac operator
  *
  *****************************************************/
+#include<byteswap.h>
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
@@ -10,14 +11,26 @@
 #include "dirac.h"
 #include "init.h"
 
-double kappa = 0.1;
+double kappa = 0.135;
 int max_iter = 1000;
 double tolerance = 1.0e-12;
 double omega = 1.1;
 
+// check the endianess of the machine
+int isBigEndian(){
+	int test = 1;
+	char* p = (char*)&test;
+	return p[0] == 0;
+}
 
 int main(int argc, char* argv[])
 {
+
+  if(isBigEndian()){
+	  printf("This system is Big Endian.\n");
+  }else{
+	  printf("This system is Little Endian.\n");
+  }
 
   printf("kappa= %f, omega= %f\n",kappa, omega);
 
@@ -75,7 +88,6 @@ int main(int argc, char* argv[])
     }
 
   su3_field_free(&u);
-
   spinor_field_free(&input);
   spinor_field_free(&solution);
 

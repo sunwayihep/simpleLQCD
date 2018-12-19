@@ -145,3 +145,148 @@ void spinor_field_free(spinor_field** s)
   *s = NULL;
 
 }
+
+void read_gauge_field(su3_field* u, char filename[]){
+	FILE* ptr = fopen(filename, "rb");
+	if(ptr == NULL){
+		printf("Error in read configurations\n");
+		exit(1);
+	}
+	fread(u, sizeof(su3_field), 1, ptr);
+	fclose(ptr);
+}
+
+// tedious swap endianess function, but we're using C, so no complain-_-
+void swap_endian(su3_field* u){
+	const int size = sizeof(Float);
+	char out[18][size];
+	for(int it=0; it<NT; ++it)
+		for(int iz=0; iz<NZ; ++iz)
+			for(int iy=0; iy<NY; ++iy)
+				for(int ix=0; ix<NX; ++ix)
+					for(int imu=0; imu<4; ++imu)
+					{
+						for(int i=0; i<size; ++i){
+							out[0][i] = ((char*)(&((*u)[it][iz][iy][ix][imu].c11.re)))[size-i-1];
+							out[1][i] = ((char*)(&((*u)[it][iz][iy][ix][imu].c11.im)))[size-i-1];
+							out[2][i] = ((char*)(&((*u)[it][iz][iy][ix][imu].c12.re)))[size-i-1];
+							out[3][i] = ((char*)(&((*u)[it][iz][iy][ix][imu].c12.im)))[size-i-1];
+							out[4][i] = ((char*)(&((*u)[it][iz][iy][ix][imu].c13.re)))[size-i-1];
+							out[5][i] = ((char*)(&((*u)[it][iz][iy][ix][imu].c13.im)))[size-i-1];
+							out[6][i] = ((char*)(&((*u)[it][iz][iy][ix][imu].c21.re)))[size-i-1];
+							out[7][i] = ((char*)(&((*u)[it][iz][iy][ix][imu].c21.im)))[size-i-1];
+							out[8][i] = ((char*)(&((*u)[it][iz][iy][ix][imu].c22.re)))[size-i-1];
+							out[9][i] = ((char*)(&((*u)[it][iz][iy][ix][imu].c22.im)))[size-i-1];
+							out[10][i] = ((char*)(&((*u)[it][iz][iy][ix][imu].c23.re)))[size-i-1];
+							out[11][i] = ((char*)(&((*u)[it][iz][iy][ix][imu].c23.im)))[size-i-1];
+							out[12][i] = ((char*)(&((*u)[it][iz][iy][ix][imu].c31.re)))[size-i-1];
+							out[13][i] = ((char*)(&((*u)[it][iz][iy][ix][imu].c31.im)))[size-i-1];
+							out[14][i] = ((char*)(&((*u)[it][iz][iy][ix][imu].c32.re)))[size-i-1];
+							out[15][i] = ((char*)(&((*u)[it][iz][iy][ix][imu].c32.im)))[size-i-1];
+							out[16][i] = ((char*)(&((*u)[it][iz][iy][ix][imu].c33.re)))[size-i-1];
+							out[17][i] = ((char*)(&((*u)[it][iz][iy][ix][imu].c33.im)))[size-i-1];
+						}
+
+
+						for(int i=0; i<size; ++i){
+							((char*)(&((*u)[it][iz][iy][ix][imu].c11.re)))[i] = out[0][i];
+							((char*)(&((*u)[it][iz][iy][ix][imu].c11.im)))[i] = out[1][i];
+							((char*)(&((*u)[it][iz][iy][ix][imu].c12.re)))[i] = out[2][i];
+							((char*)(&((*u)[it][iz][iy][ix][imu].c12.im)))[i] = out[3][i];
+							((char*)(&((*u)[it][iz][iy][ix][imu].c13.re)))[i] = out[4][i];
+							((char*)(&((*u)[it][iz][iy][ix][imu].c13.im)))[i] = out[5][i];
+							((char*)(&((*u)[it][iz][iy][ix][imu].c21.re)))[i] = out[6][i];
+							((char*)(&((*u)[it][iz][iy][ix][imu].c21.im)))[i] = out[7][i];
+							((char*)(&((*u)[it][iz][iy][ix][imu].c22.re)))[i] = out[8][i];
+							((char*)(&((*u)[it][iz][iy][ix][imu].c22.im)))[i] = out[9][i];
+							((char*)(&((*u)[it][iz][iy][ix][imu].c23.re)))[i] = out[10][i];
+							((char*)(&((*u)[it][iz][iy][ix][imu].c23.im)))[i] = out[11][i];
+							((char*)(&((*u)[it][iz][iy][ix][imu].c31.re)))[i] = out[12][i];
+							((char*)(&((*u)[it][iz][iy][ix][imu].c31.im)))[i] = out[13][i];
+							((char*)(&((*u)[it][iz][iy][ix][imu].c32.re)))[i] = out[14][i];
+							((char*)(&((*u)[it][iz][iy][ix][imu].c32.im)))[i] = out[15][i];
+							((char*)(&((*u)[it][iz][iy][ix][imu].c33.re)))[i] = out[16][i];
+							((char*)(&((*u)[it][iz][iy][ix][imu].c33.im)))[i] = out[17][i];
+						}
+					}
+}
+
+void set_pt_source(spinor_field* s, int t, int z, int y, int x, int color, int spin){
+	init_spinor_field_zero(*s);
+	switch(spin){
+		case 0:
+			{
+				switch(color){
+					case 0:
+						(*s)[t][z][y][x].c1.c1.re = 1.0;
+						(*s)[t][z][y][x].c1.c1.im = 0.0;
+						break;
+					case 1:
+						(*s)[t][z][y][x].c1.c2.re = 1.0;
+						(*s)[t][z][y][x].c1.c2.im = 0.0;
+						break;
+					case 2:
+						(*s)[t][z][y][x].c1.c3.re = 1.0;
+						(*s)[t][z][y][x].c1.c3.im = 1.0;
+						break;
+				}
+			}break;
+		case 1:
+			{
+				switch(color){
+					case 0:
+						(*s)[t][z][y][x].c2.c1.re = 1.0;
+						(*s)[t][z][y][x].c2.c1.im = 0.0;
+						break;
+					case 1:
+						(*s)[t][z][y][x].c2.c2.re = 1.0;
+						(*s)[t][z][y][x].c2.c2.im = 0.0;
+						break;
+					case 2:
+						(*s)[t][z][y][x].c2.c3.re = 1.0;
+						(*s)[t][z][y][x].c2.c3.im = 1.0;
+						break;
+				}
+			}break;
+		case 2:
+			{
+				switch(color){
+					case 0:
+						(*s)[t][z][y][x].c3.c1.re = 1.0;
+						(*s)[t][z][y][x].c3.c1.im = 0.0;
+						break;
+					case 1:
+						(*s)[t][z][y][x].c3.c2.re = 1.0;
+						(*s)[t][z][y][x].c3.c2.im = 0.0;
+						break;
+					case 2:
+						(*s)[t][z][y][x].c3.c3.re = 1.0;
+						(*s)[t][z][y][x].c3.c3.im = 1.0;
+						break;
+				}
+			}break;
+		case 3:
+			{
+				switch(color){
+					case 0:
+						(*s)[t][z][y][x].c4.c1.re = 1.0;
+						(*s)[t][z][y][x].c4.c1.im = 0.0;
+						break;
+					case 1:
+						(*s)[t][z][y][x].c4.c2.re = 1.0;
+						(*s)[t][z][y][x].c4.c2.im = 0.0;
+						break;
+					case 2:
+						(*s)[t][z][y][x].c4.c3.re = 1.0;
+						(*s)[t][z][y][x].c4.c3.im = 1.0;
+						break;
+				}
+			}break;
+		default:
+			printf("Wrong source color and spin index, you need reconsider-_-\n");
+			exit(1);
+	}
+
+
+
+}
