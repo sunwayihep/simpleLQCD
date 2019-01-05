@@ -235,7 +235,7 @@ void set_pt_source(spinor_field* s, int t, int z, int y, int x, int color, int s
 						break;
 					case 2:
 						(*s)[t][z][y][x].c1.c3.re = 1.0;
-						(*s)[t][z][y][x].c1.c3.im = 1.0;
+						(*s)[t][z][y][x].c1.c3.im = 0.0;
 						break;
 				}
 			}break;
@@ -252,7 +252,7 @@ void set_pt_source(spinor_field* s, int t, int z, int y, int x, int color, int s
 						break;
 					case 2:
 						(*s)[t][z][y][x].c2.c3.re = 1.0;
-						(*s)[t][z][y][x].c2.c3.im = 1.0;
+						(*s)[t][z][y][x].c2.c3.im = 0.0;
 						break;
 				}
 			}break;
@@ -269,7 +269,7 @@ void set_pt_source(spinor_field* s, int t, int z, int y, int x, int color, int s
 						break;
 					case 2:
 						(*s)[t][z][y][x].c3.c3.re = 1.0;
-						(*s)[t][z][y][x].c3.c3.im = 1.0;
+						(*s)[t][z][y][x].c3.c3.im = 0.0;
 						break;
 				}
 			}break;
@@ -286,7 +286,7 @@ void set_pt_source(spinor_field* s, int t, int z, int y, int x, int color, int s
 						break;
 					case 2:
 						(*s)[t][z][y][x].c4.c3.re = 1.0;
-						(*s)[t][z][y][x].c4.c3.im = 1.0;
+						(*s)[t][z][y][x].c4.c3.im = 0.0;
 						break;
 				}
 			}break;

@@ -52,9 +52,6 @@ int main(int argc, char* argv[])
 
 	printf("gauge field readed: \n");
 	printf("%f\n", (((*data)[0][0][0][0][0]).c11.re));
-	printf("%f\n", (((*data)[0][0][0][0][0]).c11.im));
-	printf("%f\n", (((*data)[0][0][0][0][0]).c12.re));
-	printf("%f\n", (((*data)[0][0][0][0][0]).c12.im));
 
 	// write the solution from each spin and color source, i.e. 12 in total
 	// to form a propagator
